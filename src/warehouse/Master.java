@@ -8,7 +8,6 @@ package warehouse;
 public class Master {
 	Floor floor;
 	Robot robot;
-	Tickable robotTick;
 	/**
 	 * Constructor should build instance of all other components,
 	 * save them in members above for later. Order of creating the
@@ -18,7 +17,6 @@ public class Master {
 	public Master(Floor inf, Robot inr) {
 		floor = inf;
 		robot = inr; 
-		robotTick = robot.getTickObserver();
 	    }
 	/**
 	 * Run a simulation. This code would need to be generalized
@@ -29,7 +27,8 @@ public class Master {
 	 */
 	public void Run(int limit) {
 	  for (int i=0; i<limit; i++) {
-		robotTick.tick(i);  
+		Tickable t = (Tickable) robot;
+		t.tick(i);  
 	  }		
 		
 	}
