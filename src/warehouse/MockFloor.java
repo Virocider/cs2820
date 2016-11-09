@@ -39,6 +39,13 @@ public class MockFloor implements Floor {
   public Point getShippingDock() { return shippingdock; }
   public Point getReceivingDock() { return receivingdock; }
   public Point getCharger() { return charger; }
+  public int getNumShelfAreas() { 
+	return shelfareas.size();
+    }
+  public ShelfArea getShelfArea(int which) {
+	return shelfareas.get(which);
+    }
+  
   /**
    * @return some random Point within a randomly 
    * chosen shelfarea - might be useful for product

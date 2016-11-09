@@ -27,6 +27,19 @@ public class ShelfArea {
 	populate();  // fill with shelves
     }
   /**
+   * @return Point in lower left corner of
+   * this ShelfArea.
+   */
+  Point getCorner() { return corner; }
+  /**
+   * @return width of this ShelfArea
+   */
+  int getWidth() { return width; }
+  /**
+   * @return height of this ShelfArea
+   */
+  int getHeight() { return 2; }
+  /**
    * fill this shelfarea with Shelf objects at each Point;
    * this will be called by the constructor
    */

@@ -3,6 +3,25 @@ package warehouse;
 /**
  * 
  * @author tedherman
+ * 
+ * The Floor object has methods so that
+ * Visualizer can "learn" about how the 
+ * floor is organized without having to 
+ * code all the locations in two places,
+ * Floor and Visualizer. If the methods 
+ * currently provided in this interface
+ * are insufficient, then by all means 
+ * add more methods or change these.
+ * 
+ * NOTE: the (x,y) coordinates, as put
+ * into Point objects, have the same 
+ * "reverse" way of treating y that Java
+ * Swing and browsers also do: y=0 at the 
+ * top of a window (top of the floor layout)
+ * and gets larger as we go further down
+ * in the floor map. This is opposite to 
+ * normal math, but conventional in GUI 
+ * thinking about frames, canvases, windows.
  *
  */
 
@@ -15,6 +34,8 @@ public interface Floor {
   Point getShippingDock(); 
   Point getReceivingDock(); 
   Point getCharger();
+  int getNumShelfAreas();
+  ShelfArea getShelfArea(int which);
   // method used by Inventory to stock items on shelves
   Point randomInShelfArea(); 
   }
