@@ -11,7 +11,8 @@ public class TestMaster {
 		Robot R = new MockRobot();
 		Floor F = new MockFloor();
 		Inventory I = new MockInventory(F);
-		Master T = new Master(F,R,I);
+		Orders O = new MockOrders(I);
+		Master T = new Master(F,R,I,O);
 		T.Run(10);
 		// right now this is so simple, there is no assertEquals
 		// kind of thing to test

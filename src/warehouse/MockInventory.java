@@ -25,10 +25,18 @@ public class MockInventory implements Inventory {
 		Item n = new Item(CatItem.catalog[i].id,CatItem.catalog[i].description);
 		Point p = floor.randomInShelfArea();
 		n.setPlace((Shelf)p.getContents());
+	    }
 	  }
+    }
+  /**
+   * @author Ted Herman
+   * return a random Item from the catalog, to build a mock order
+   */
+  public Item randomItem() {
+	Random R = new Random();
+	int k = R.nextInt(CatItem.catalog.length);
+	return new Item(CatItem.catalog[k].id,CatItem.catalog[k].description);
 	}
-	  
-  }
   /**
    * @param Shelf 
    * @return array of Item that are on this shelf
