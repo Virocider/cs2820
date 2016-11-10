@@ -20,6 +20,10 @@ public class Item {
 	id = num;
 	description = title;
     }
+  /**
+   * @author Ted Herman
+   * @return Shelf for this Item
+   */
   public Shelf getPlace() { return place; }
   public void setPlace(Shelf s) { place = s; }
   }
