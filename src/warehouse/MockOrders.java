@@ -2,7 +2,7 @@ package warehouse;
 
 import java.util.*;
 
-public class MockOrders implements Orders {
+public class MockOrders implements Orders, Tickable, Picker {
 	
   private Inventory I;
   private LinkedList<Order> orderqueue;
@@ -20,7 +20,23 @@ public class MockOrders implements Orders {
 	  orderqueue.addLast(makeOrder());
 	  }
     }
+  
+  /**
+   * @author Ted Herman
+   * 
+   * This tick method would be where Orders does the 
+   * real work (see design README)
+   * 
+   */
+  public void tick(int count) {
+    }
 
+  /**
+   * @author Ted Herman
+   * Picker event notify(robot), not finished.
+   */
+  public void notify(Robot r) { };
+  
   /**
    * @author Ted Herman
    * creates a random Order

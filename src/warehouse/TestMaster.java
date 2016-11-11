@@ -8,8 +8,8 @@ public class TestMaster {
 
 	@Test
 	public void test000() {
-		Robot R = new MockRobot();
 		Floor F = new MockFloor();
+		RobotScheduler R = new MockRobotScheduler(F);
 		Inventory I = new MockInventory(F);
 		Orders O = new MockOrders(I);
 		Master T = new Master(F,R,I,O);
