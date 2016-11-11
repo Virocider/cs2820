@@ -71,6 +71,15 @@ public class MockFloor implements Floor {
   public Point getShippingDock() { return shippingdock; }
   public Point getReceivingDock() { return receivingdock; }
   public Point getCharger() { return charger; }
+  /**
+   * A very stupid getPath(s,t) that just makes
+   * and returns a list of only two Points, s and t
+   */
+  public List<Point> getPath(Point s,Point t) {
+	LinkedList<Point> L = new LinkedList<Point>();
+	L.addFirst(s); L.addLast(t);
+	return L;
+    }
   public int getNumShelfAreas() { 
 	return shelfareas.size();
     }

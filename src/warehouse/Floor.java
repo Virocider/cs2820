@@ -25,6 +25,8 @@ package warehouse;
  *
  */
 
+import java.util.*;
+
 public interface Floor {
   // methods used mainly by Visualizer 
   // there should be more methods, so Visualizer can
@@ -34,6 +36,7 @@ public interface Floor {
   Point getShippingDock(); 
   Point getReceivingDock(); 
   Point getCharger();
+  List<Point> getPath(Point start,Point end);
   Cell getCell(int x, int y);
   Cell getCell(Point P);
   int getNumShelfAreas();

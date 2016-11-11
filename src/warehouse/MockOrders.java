@@ -5,6 +5,7 @@ import java.util.*;
 public class MockOrders implements Orders, Tickable, Picker {
 	
   private Inventory I;
+  private RobotScheduler R;
   private LinkedList<Order> orderqueue;
   private SimRandom randomsource;
   
@@ -15,8 +16,10 @@ public class MockOrders implements Orders, Tickable, Picker {
    * it just creates a few initial orders)
    * @param rand is a SimRandom, for predictable randomness
    */
-  public MockOrders(Inventory I, SimRandom rand) {
+  public MockOrders(Inventory I, 
+		  RobotScheduler R, SimRandom rand) {
 	this.I = I; // so we can later call upon Inventory methods
+	this.R = R; // so that later, we can call RobotScheduler
 	randomsource = rand;
 	orderqueue = new LinkedList<Order>();
 	for (int i=0;i<3;i++) {
@@ -38,7 +41,14 @@ public class MockOrders implements Orders, Tickable, Picker {
    * @author Ted Herman
    * Picker event notify(robot), not finished.
    */
-  public void notify(Robot r) { };
+  public void notify(Robot r, Shelf s) { 
+	// should be code here to desired Item from Shelf s
+	// (Inventory has a method to do that)
+	// mark that Item as being checked off in the Order
+	// and if this is the last Item needed, tell Belt 
+	// that a Bin is done.
+	R.returnShelf(r);
+    };
   
   /**
    * @author Ted Herman
@@ -63,15 +73,15 @@ public class MockOrders implements Orders, Tickable, Picker {
  */
 class Address {
 	
-  SimRandom R;
+  SimRandom SR;
   
   /**
    * @author Ted Herman
-   * @param R is SimRandom object, so that all the random
+   * @param SR is SimRandom object, so that all the random
    * choices by methods of Address will be predictably random
    */
-  public Address(SimRandom R) {
-	this.R = R;
+  public Address(SimRandom SR) {
+	this.SR = SR;
     }
 
   /**
@@ -80,7 +90,6 @@ class Address {
    * @return String containing a random address for an order
    */
   public String randomAddress() {
-	this.R = R;
 	String FirstName = randomFirstName();
 	String LastName = randomLastName();
 	String StreetNumber = new Integer(randomStreetNumber()).toString();
@@ -102,14 +111,14 @@ class Address {
 			"Main Street", "Washington Boulevard",
 			"Third Street", "Park Road",
 			"Maple Street", "Hill Road"};
-	return baseNames[R.nextInt(baseNames.length)];
+	return baseNames[SR.nextInt(baseNames.length)];
     }
   /**
    * @author Ted Herman
    * @return an integer in the range [1,999] for street address
    */
   private int randomStreetNumber () {
-	return 1+R.nextInt(998);
+	return 1+SR.nextInt(998);
     }
   /**
    * @author Ted Herman
@@ -119,7 +128,7 @@ class Address {
 	final String[] baseFirstNames = {"Dakota", "Emma",
 			"Julian", "Nigella", "Will", "Asti", "Lee",
 			"Pat", "Mavis", "Jerome", "Lilly", "Tess"};
-	return baseFirstNames[R.nextInt(baseFirstNames.length)];
+	return baseFirstNames[SR.nextInt(baseFirstNames.length)];
 	}
   /**
    * @author Ted Herman
@@ -130,7 +139,7 @@ class Address {
 				"Smith","Wright","Jefferson","Iqbal",
 				"Owens","Lafleur","Metselen","Vinceroy",
 				"Saville","Troitski","Andrews"};
-	return baseLastNames[R.nextInt(baseLastNames.length)];
+	return baseLastNames[SR.nextInt(baseLastNames.length)];
     }
   /**
    * @author Ted Herman
@@ -139,7 +148,7 @@ class Address {
   private String randomState() {
 	final String[] baseState = {"IA","NE","MO",
 				"IL","KS","MN","SD","AR","OK","TX"};
-	return baseState[R.nextInt(baseState.length)];
+	return baseState[SR.nextInt(baseState.length)];
     }
   /**
    * @author Ted Herman
@@ -149,7 +158,7 @@ class Address {
 	final String[] baseCity = {"Springfield","Clinton",
 				"Madison","Franklin","Chester","Marion",
 				"Greenville","Salem","Anytown","Hope"};
-	return baseCity[R.nextInt(baseCity.length)];
+	return baseCity[SR.nextInt(baseCity.length)];
     }
   /**
    * @author Ted Herman
@@ -158,7 +167,7 @@ class Address {
   private String randomZip() {
     String ZipCode = "";
     for (int i=0; i<6; i++) 
-      ZipCode += "0123456789".charAt(R.nextInt(10));
+      ZipCode += "0123456789".charAt(SR.nextInt(10));
     return ZipCode;
   }
 }

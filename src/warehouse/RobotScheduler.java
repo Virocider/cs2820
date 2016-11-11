@@ -16,8 +16,14 @@ public interface RobotScheduler {
    */
   void requestShelf(Shelf s, Picker p);
   /**
+   * @param s is a Shelf to bring to the receiving dock
+   * @param d is a Dock interface to invoke when the shelf 
+   * has been delivered to the dock location
+   */
+  void requestShelf(Shelf s, Dock d);
+  /**
    * the returnShelf() tells a Robot carrying a Shelf to 
    * put that Shelf back into a ShelfArea on the Floor
    */
-  void returnShelf();
+  void returnShelf(Robot r);
   }
