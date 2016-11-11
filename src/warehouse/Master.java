@@ -12,7 +12,7 @@ package warehouse;
  */
 public class Master {
 	Floor floor;
-	Robot robot;
+	RobotScheduler robotscheduler;
 	Inventory inventory;
 	Orders orders;
 	/**
@@ -21,10 +21,10 @@ public class Master {
 	 * components might be important, as some components need to
 	 * know about the others at the time of their construction.
 	 */
-	public Master(Floor inf, Robot inr,
+	public Master(Floor inf, RobotScheduler inr,
 			Inventory ini, Orders ino) {
 		floor = inf;
-		robot = inr; 
+		robotscheduler = inr; 
 		inventory = ini;
 		orders = ino;
 	    }
@@ -37,8 +37,10 @@ public class Master {
 	 */
 	public void Run(int limit) {
 	  for (int i=0; i<limit; i++) {
-		Tickable t = (Tickable) robot;
+		Tickable t = (Tickable) robotscheduler;
 		t.tick(i);  
+		t = (Tickable) orders;
+		t.tick(i);
 	  }		
 		
 	}
