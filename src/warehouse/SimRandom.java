@@ -1,7 +1,5 @@
 package warehouse;
 
-import java.util.Random;
-
 /**
  * 
  * @author Ted Herman
@@ -19,9 +17,14 @@ import java.util.Random;
  *
  */
 public class SimRandom {
-  Random R; // delegate randomness to java.util.Random
+  java.util.Random R; // delegate randomness to java.util.Random
+  /**
+   * Constructor just creates a java.util.Random with a seed value,
+   * so that every new SimRandom object will have the same sequence
+   * of pseudo-random numbers.
+   */
   public SimRandom() {
-	R = new Random(1001L);  // give initial seed for determinism
+	R = new java.util.Random(1001L);  // give initial seed for determinism
     }
   public int nextInt(int bound) {
 	return R.nextInt(bound);

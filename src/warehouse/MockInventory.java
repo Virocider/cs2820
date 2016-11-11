@@ -10,6 +10,7 @@ import java.util.*;
 public class MockInventory implements Inventory {
   List<Item> stock;  // all the in-stock items of warehouse
   SimRandom randomsource;  // supply of random numbers
+  Floor floor;
   /**
    * @author Ted Herman
    * @param floor 
@@ -18,6 +19,7 @@ public class MockInventory implements Inventory {
    * on random shelves in the warehouse
    */
   public MockInventory(Floor floor, SimRandom rand)  {
+	this.floor = floor;
 	stock = new ArrayList<Item>();
 	randomsource = rand;
 	for (int i=0;i<CatItem.catalog.length;i++) {
@@ -26,7 +28,8 @@ public class MockInventory implements Inventory {
 		// up to five instances of this particular item
 		Item n = new Item(CatItem.catalog[i].id,CatItem.catalog[i].description);
 		Point p = floor.randomInShelfArea();
-		n.setPlace((Shelf)p.getContents());
+		Cell c = floor.getCell(p);
+		n.setPlace((Shelf)c.getContents());
 	    }
 	  }
     }
@@ -55,9 +58,10 @@ public class MockInventory implements Inventory {
    * duplicate for polymorphism, items by point containing shelf
    */
   public Item[] onShelf(Point p) {
-	if (p.getContents() == null) return null;
-	if (!(p.getContents() instanceof Shelf)) return null;
-	return this.onShelf((Shelf)p.getContents());
+	Cell c = floor.getCell(p);
+	if (c.getContents() == null) return null;
+	if (!(c.getContents() instanceof Shelf)) return null;
+	return this.onShelf((Shelf)c.getContents());
     }
   public int stockCount(int x) { 
 	int r = 0;

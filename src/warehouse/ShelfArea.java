@@ -11,20 +11,20 @@ import java.util.Random;
 public class ShelfArea {
   int width; // height will always be 2 -- just two shelves
   Point corner;  // lower left corner of shelf area
-  List<Point> contents;
+  List<Cell> contents;
   SimRandom randomsource; // for deterministic randomness
   /**
    * @param corner - lower left corner of shelf area
    * @param width - how many squares wide shelf area is
    */
   ShelfArea(Point corner, int width, SimRandom rand) {
-	contents = new ArrayList<Point>();
+	contents = new ArrayList<Cell>();
 	randomsource = rand; 
 	this.corner = new Point(corner.x,corner.y);
 	this.width = width;
 	for (int i=corner.y; i<corner.y+2; i++)
 	 for (int j=corner.x; j<corner.x+width; j++) {
-	   contents.add(new Point(j,i));
+	   contents.add(new Cell(j,i));
        }
 	populate();  // fill with shelves
     }
@@ -42,11 +42,21 @@ public class ShelfArea {
    */
   int getHeight() { return 2; }
   /**
-   * fill this shelfarea with Shelf objects at each Point;
+   * @return a cell in this ShelfArea
+   * at a specified Point (x,y)
+   */
+  Cell getCell(Point P) {
+	for (Cell e: contents) {
+	  if (e.equals(P)) return e;
+	  }
+	return null;
+    }
+  /**
+   * fill this shelfarea with Shelf objects in each Cell;
    * this will be called by the constructor
    */
   void populate() {
-	for (Point e: contents) {
+	for (Cell e: contents) {
 	  e.setContents(new Shelf(e));
 	  }
     }
@@ -54,7 +64,7 @@ public class ShelfArea {
    * @return true if point P is within this ShelfArea
    * @param P point to test
    */
-  boolean within(Point P) {
+  boolean hasWithin(Point P) {
 	if (P.x < corner.x) return false;
 	if (P.x >= corner.x + width) return false;
 	if (P.y >= corner.y+2) return false;
@@ -62,18 +72,18 @@ public class ShelfArea {
 	return true;
     }
   /**
-   * @return true if point P has non-null content (robot or shelf)
+   * @return true if cell P has non-null content (robot or shelf)
    */
-  boolean occupied(Point P) {
-	if (within(P) && P.contents != null) return true;
+  boolean occupied(Cell P) {
+	if (this.hasWithin(P) && P.contents != null) return true;
 	return false;
     }
   /**
    * @param Object to place in a Point
    * @note if Object is null, then makes Point P empty
    */
-  void setContent(Point P, Object O) {
-	if (!occupied(P) && within(P)) {
+  void setContent(Cell P, Object O) {
+	if (!occupied(P) && hasWithin(P)) {
 	  P.contents = O;	
 	  }
     }

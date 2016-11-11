@@ -34,6 +34,8 @@ public interface Floor {
   Point getShippingDock(); 
   Point getReceivingDock(); 
   Point getCharger();
+  Cell getCell(int x, int y);
+  Cell getCell(Point P);
   int getNumShelfAreas();
   ShelfArea getShelfArea(int which);
   // method used by Inventory to stock items on shelves

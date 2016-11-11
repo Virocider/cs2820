@@ -21,6 +21,7 @@ public class MockFloor implements Floor {
   final Point charger = new Point(20,20);
 
   List<ShelfArea> shelfareas;
+  Map<String,Cell> allpoints;
   SimRandom randogen;
 
   /**
@@ -33,6 +34,30 @@ public class MockFloor implements Floor {
     shelfareas.add(new ShelfArea(new Point(20,100),160, randogen));
     shelfareas.add(new ShelfArea(new Point(20,200),160, randogen));
     shelfareas.add(new ShelfArea(new Point(20,300),160, randogen));
+    allpoints = new HashMap<String,Cell>();
+    // make a map of all cells that the warehouse has, where
+    // each cell is one "square" on the floor
+    for (int i=0; i<warehousewidth; i++)
+      for (int j=0; j<warehousedepth; j++) {
+        Point P = new Point(i,j);  // (i,j) is the (x,y)
+        // check if this point already has a cell in a shelf area
+        // and if so, just use the existing cell
+        Cell N = new Cell(i,j);  // will be the new cell
+        for (ShelfArea s: shelfareas) {
+          if (s.hasWithin(P)) N = s.getCell(P);
+          }
+        allpoints.put(P.toString(),N);
+        }
+    }
+  /**
+   * @author Ted Herman
+   * return Cell at specified place
+   */
+  public Cell getCell(Point P) {
+	return allpoints.get(P.toString());  
+    }
+  public Cell getCell(int x, int y) {
+	return getCell(new Point(x,y));
     }
   /**
    * @author Ted Herman
