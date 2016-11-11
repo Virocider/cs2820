@@ -25,10 +25,9 @@ public class TestFloor {
   public void test002() {
 	SimRandom randomsource = new SimRandom();
 	Floor F = new MockFloor(randomsource);
-	System.out.println(F.getCell(158,100));
-	assertTrue((F.randomInShelfArea()).equals(new Point(123,299)));
-	assertTrue((F.randomInShelfArea()).equals(new Point(71,299)));
-	assertTrue((F.randomInShelfArea()).equals(new Point(22,99)));
+	assertTrue((F.randomInShelfArea()).equals(new Point(123,159)));
+	assertTrue((F.randomInShelfArea()).equals(new Point(131,159)));
+	assertTrue((F.randomInShelfArea()).equals(new Point(142,99)));
     }
   /**
    * Test if Point (158,100) contains a Shelf, as expected

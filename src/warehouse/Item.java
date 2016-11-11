@@ -7,8 +7,8 @@ package warehouse;
  */
 
 public class Item {
-  int id;  // item number, like a warehouse SKU number
-  String description;   // text for the item
+  public int id;  // item number, like a warehouse SKU number
+  public String description;   // text for the item
   Shelf place;  // where this item resides (or null)
   /**
    * @param num
@@ -26,4 +26,7 @@ public class Item {
    */
   public Shelf getPlace() { return place; }
   public void setPlace(Shelf s) { place = s; }
+  public boolean equals(Item other) {
+	return (this.id == other.id && this.description == other.description);
+    }
   }

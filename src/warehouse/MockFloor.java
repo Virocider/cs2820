@@ -31,9 +31,9 @@ public class MockFloor implements Floor {
   public MockFloor(SimRandom rand) {
     randogen = rand;
     shelfareas = new ArrayList<ShelfArea>();
-    shelfareas.add(new ShelfArea(new Point(20,100),160, randogen));
-    shelfareas.add(new ShelfArea(new Point(20,200),160, randogen));
-    shelfareas.add(new ShelfArea(new Point(20,300),160, randogen));
+    shelfareas.add(new ShelfArea(new Point(20,100),140, randogen));
+    shelfareas.add(new ShelfArea(new Point(20,140),140, randogen));
+    shelfareas.add(new ShelfArea(new Point(20,160),140, randogen));
     allpoints = new HashMap<String,Cell>();
     // make a map of all cells that the warehouse has, where
     // each cell is one "square" on the floor
@@ -44,7 +44,10 @@ public class MockFloor implements Floor {
         // and if so, just use the existing cell
         Cell N = new Cell(i,j);  // will be the new cell
         for (ShelfArea s: shelfareas) {
-          if (s.hasWithin(P)) N = s.getCell(P);
+          if (s.hasWithin(P)) {  
+        	N = s.getCell(P);
+        	assert N != null;
+            }
           }
         allpoints.put(P.toString(),N);
         }
@@ -83,6 +86,6 @@ public class MockFloor implements Floor {
    */
   public Point randomInShelfArea() {
     int s = randogen.nextInt(shelfareas.size());
-    return shelfareas.get(s).randomPoint();
+    return (shelfareas.get(s)).randomPoint();
     }
 }

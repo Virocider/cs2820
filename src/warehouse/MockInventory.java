@@ -30,6 +30,7 @@ public class MockInventory implements Inventory {
 		Point p = floor.randomInShelfArea();
 		Cell c = floor.getCell(p);
 		n.setPlace((Shelf)c.getContents());
+		stock.add(n);
 	    }
 	  }
     }
@@ -49,7 +50,7 @@ public class MockInventory implements Inventory {
 	List<Item> scan = new ArrayList<Item>();
 	Item[] returnpattern = new Item[0];
 	for (Item e: stock) {
-	  if (!e.getPlace().equals(s.home)) continue;
+	  if (!(e.getPlace().home).equals(s.home)) continue;
 	  scan.add(e);
 	  }
 	return scan.toArray(returnpattern);
@@ -72,6 +73,19 @@ public class MockInventory implements Inventory {
     }
   public int stockCount(Item i) {
 	return this.stockCount(i.id);
+    }
+  /**
+   * @author Ted Herman
+   * @return null or a Shelf object
+   * Just return the first occurrence of this item's Shelf
+   * WARNING BUGGY - could fail if looking for multiple units of
+   * the same item (they could be on different shelves)
+   */
+  public Shelf findItem(Item i) {
+	for (Item e: stock) {
+      if (e.equals(i)) return e.getPlace();  
+	  }
+	return null;
     }
   }
 
@@ -482,4 +496,4 @@ class CatItem {
     new CatItem(305144,"iPad Blender"),
     new CatItem(743421,"iPhone/iPod Stereo"),
     };  
-}
+  }

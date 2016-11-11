@@ -22,7 +22,7 @@ public class ShelfArea {
 	randomsource = rand; 
 	this.corner = new Point(corner.x,corner.y);
 	this.width = width;
-	for (int i=corner.y; i<corner.y+2; i++)
+	for (int i=corner.y-1; i<corner.y+1; i++)
 	 for (int j=corner.x; j<corner.x+width; j++) {
 	   contents.add(new Cell(j,i));
        }
@@ -67,8 +67,8 @@ public class ShelfArea {
   boolean hasWithin(Point P) {
 	if (P.x < corner.x) return false;
 	if (P.x >= corner.x + width) return false;
-	if (P.y >= corner.y+2) return false;
-	if (P.y < corner.y) return false;
+	if (P.y > corner.y) return false;
+	if (P.y < corner.y-1) return false;
 	return true;
     }
   /**
@@ -94,6 +94,7 @@ public class ShelfArea {
 	int column = randomsource.nextInt(width);
 	int row = randomsource.nextInt(2);
 	Point P = new Point(corner.x+column,corner.y-row);
+	assert hasWithin(P);
 	return P;
     }
  }
