@@ -9,17 +9,19 @@ import java.util.*;
 
 public class MockInventory implements Inventory {
   List<Item> stock;  // all the in-stock items of warehouse
+  SimRandom randomsource;  // supply of random numbers
   /**
    * @author Ted Herman
    * @param floor 
+   * @param rand is a SimRandom for predictable randomness
    * Constructor of Mock Inventory, puts lots of catalog items
    * on random shelves in the warehouse
    */
-  public MockInventory(Floor floor)  {
+  public MockInventory(Floor floor, SimRandom rand)  {
 	stock = new ArrayList<Item>();
-	Random randgen = new Random();
+	randomsource = rand;
 	for (int i=0;i<CatItem.catalog.length;i++) {
-	  int times = 1+randgen.nextInt(4);
+	  int times = 1+randomsource.nextInt(4);
 	  for (int j=0;j<times;j++) {
 		// up to five instances of this particular item
 		Item n = new Item(CatItem.catalog[i].id,CatItem.catalog[i].description);
@@ -33,8 +35,7 @@ public class MockInventory implements Inventory {
    * return a random Item from the catalog, to build a mock order
    */
   public Item randomItem() {
-	Random R = new Random();
-	int k = R.nextInt(CatItem.catalog.length);
+	int k = randomsource.nextInt(CatItem.catalog.length);
 	return new Item(CatItem.catalog[k].id,CatItem.catalog[k].description);
 	}
   /**

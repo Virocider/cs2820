@@ -10,7 +10,7 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    * @param Floor object.
    * Floor is needed to find location of charger, etc.
    */
-  public MockRobotScheduler(Floor F, Picker P) {
+  public MockRobotScheduler(Floor F) {
 	this.F = F;
 	robot = new Robot(F.getCharger()); // initially at the charger
     }

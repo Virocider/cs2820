@@ -21,14 +21,18 @@ public class MockFloor implements Floor {
   final Point charger = new Point(20,20);
 
   List<ShelfArea> shelfareas;
-  Random randogen;
+  SimRandom randogen;
 
-  public MockFloor() {
-    randogen = new Random();
+  /**
+   * Constructor of Mock Floor
+   * @param rand is a SimRandom for predictable randomness
+   */
+  public MockFloor(SimRandom rand) {
+    randogen = rand;
     shelfareas = new ArrayList<ShelfArea>();
-    shelfareas.add(new ShelfArea(new Point(20,100),160));
-    shelfareas.add(new ShelfArea(new Point(20,200),160));
-    shelfareas.add(new ShelfArea(new Point(20,300),160));
+    shelfareas.add(new ShelfArea(new Point(20,100),160, randogen));
+    shelfareas.add(new ShelfArea(new Point(20,200),160, randogen));
+    shelfareas.add(new ShelfArea(new Point(20,300),160, randogen));
     }
   /**
    * @author Ted Herman

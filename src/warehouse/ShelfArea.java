@@ -12,12 +12,14 @@ public class ShelfArea {
   int width; // height will always be 2 -- just two shelves
   Point corner;  // lower left corner of shelf area
   List<Point> contents;
+  SimRandom randomsource; // for deterministic randomness
   /**
    * @param corner - lower left corner of shelf area
    * @param width - how many squares wide shelf area is
    */
-  ShelfArea(Point corner, int width) {
+  ShelfArea(Point corner, int width, SimRandom rand) {
 	contents = new ArrayList<Point>();
+	randomsource = rand; 
 	this.corner = new Point(corner.x,corner.y);
 	this.width = width;
 	for (int i=corner.y; i<corner.y+2; i++)
@@ -79,9 +81,8 @@ public class ShelfArea {
    * @return random Point within this shelfarea
    */
   Point randomPoint() {
-	Random R = new Random();
-	int column = R.nextInt(width);
-	int row = R.nextInt(2);
+	int column = randomsource.nextInt(width);
+	int row = randomsource.nextInt(2);
 	Point P = new Point(corner.x+column,corner.y-row);
 	return P;
     }
