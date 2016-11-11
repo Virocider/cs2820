@@ -83,9 +83,28 @@ public class MockInventory implements Inventory {
    */
   public Shelf findItem(Item i) {
 	for (Item e: stock) {
+	  if (!e.place.onFloor()) continue;  // ignore moving shelves
       if (e.equals(i)) return e.getPlace();  
 	  }
 	return null;
+    }
+  /**
+   * This method is for Orders (the Picker) to remove an item
+   * from a Shelf, thus removing it from available inventory
+   * @param Item a is the item to be removed from
+   * @param Shelf s (only one occurrence of the Item is removed)
+   * @return the Item removed
+   */
+  public Item removeItem(Item a, Shelf s) {
+	for (Item e: stock) {
+      assert !(e.place.onFloor());  // only remove from carried Shelf
+      if (!e.equals(a)) continue;   // look for this item only
+      if (!e.place.home.equals(s.home)) continue; // only Shelf s
+      stock.remove(e);
+      e.setPlace(null);  // not on Shelf anymore
+      return e;
+	  }
+	return null;  // not supposed to happen
     }
   }
 

@@ -13,4 +13,5 @@ public interface Inventory {
   Shelf findItem(Item e);  // find a shelf that has this Item
   int stockCount(Item x);  // quantity of x that's in stock
   int stockCount(int ItemNum);  // quantity in stock of Item #
+  Item removeItem(Item I,Shelf s); // remove Item from Shelf
   }
