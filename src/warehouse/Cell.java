@@ -10,12 +10,19 @@ package warehouse;
  *
  */
 public class Cell extends Point {
-  public Object contents;
+  private Object contents;  // Robot or Shelf
+  private Robot  shadow;    // could be Robot at same place as Shelf
   Cell(int x, int y) {
-	super(x,y); contents = null;
+	super(x,y); contents = null; shadow = null;
 	}
   Object getContents() {
 	return contents;
+    }
+  Robot getShadow() {
+	return shadow;
+    }
+  void setShadow(Robot R) {
+	shadow = R;
     }
   void setContents(Object O) {
 	contents = O;  

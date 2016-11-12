@@ -13,7 +13,7 @@ public class TestFloor {
   public void test001() {
 	SimRandom randomsource = new SimRandom();
 	Floor F = new MockFloor(randomsource);
-	assertTrue((F.getPicker()).equals(new Point(0,10)));
+	assertTrue((F.getPicker()).equals(new Point(0,190)));
 	}
   /**
    * Test that Floor returns "random" points in shelfarea

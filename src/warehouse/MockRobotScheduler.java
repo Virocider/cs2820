@@ -14,6 +14,8 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	this.F = F;
 	robots = new Robot[1];
 	robots[0] = new Robot(F.getCharger()); // initially at the charger
+	Cell t = F.getCell(F.getCharger());    // occupy that cell
+	t.setContents(robots[0]);
     }
 	
   /**
@@ -34,23 +36,41 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    * on where it should go next (if anywhere).
    */
   private void moveRobot(Robot r) { 
-    System.out.println("robot at "+r.location+" state "+r.state);
+    // some initial assertions say what is the expected precondition
+    assert r.path != null;
+    assert r.path.size() > 0;
+    Cell tempcell = F.getCell(r.location);
+    assert tempcell.getContents() == r || tempcell.getShadow() == r;
+    tempcell.setContents(null); // Robot will no longer be in this cell
+    tempcell.setShadow(null);
 	if (r.path.size()>1) {
 	   r.location = r.path.get(0);  // move to first point in path
 	   r.path.remove(0);  // remove first point in path
+	   tempcell = F.getCell(r.location);
+	   tempcell.setContents(r);  // robot has moved to new place
 	   return;
 	   }
 	// when path has one Point, we arrive in this tick to target
 	Point goal = r.path.get(0);
 	r.location = goal;
-	System.out.println("robot movesto "+goal+" state "+r.state);
+	tempcell = F.getCell(goal);
+	// on arrival to Shelf, validate there is a Shelf there
+	if (r.state == Robot.pickershelfbound 
+			|| r.state == Robot.dockshelfbound) {
+	   assert tempcell.getContents() instanceof Shelf;
+	   assert r.shelf == tempcell.getContents();
+	   tempcell.setShadow(r);
+	   }
+	// in any other case, cell should empty
+	else { 
+	  assert tempcell.getContents() == null; 
+	  tempcell.setContents(r);
+	  }
+	// System.out.println("robot movesto "+goal+" state "+r.state);
 	r.path = null;
 	switch (r.state) { 
 	// these are cases of reaching goal in path
 	case Robot.pickershelfbound:
-	   Object o = F.getCell(goal).getContents();
-	   assert o instanceof Shelf;
-	   assert r.shelf == (Shelf)o;
 	   r.shelf.pickup();  // robot claims this shelf
 	   r.path = F.getPath(r.location,F.getPicker());
 	   r.state = Robot.pickerbound;  // now heading to Picker
@@ -62,14 +82,14 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	case Robot.afterdockshelfbound:
 	case Robot.afterpickershelfbound:
 	   r.shelf.putdown();  // Shelf is back home
+	   tempcell = F.getCell(r.location);  // change status of this cell
+	   tempcell.setContents(r.shelf);
+	   tempcell.setShadow(r);
 	   r.shelf = null;
 	   r.path = F.getPath(goal,F.getCharger());
 	   r.state = Robot.chargerbound;
 	   break;
 	case Robot.dockshelfbound:
-	   o = F.getCell(goal).getContents();
-	   assert o instanceof Shelf;
-	   assert r.shelf == (Shelf)o;
 	   r.shelf.pickup();  // robot claims this shelf
 	   r.path = F.getPath(r.location,F.getReceivingDock());
 	   r.state = Robot.dockbound;  // now heading to Dock

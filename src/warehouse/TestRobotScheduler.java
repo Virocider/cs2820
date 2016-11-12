@@ -82,7 +82,6 @@ public class TestRobotScheduler {
 	assertTrue(tmp instanceof Shelf);
 	assertTrue(((Shelf)tmp).onFloor());
 	assertEquals(LP.r.state,Robot.chargerbound);
-	System.out.println(LP.r.location);
     }
   
   @Test

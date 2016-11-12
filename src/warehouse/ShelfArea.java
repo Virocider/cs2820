@@ -11,20 +11,20 @@ import java.util.Random;
 public class ShelfArea {
   int width; // height will always be 2 -- just two shelves
   Point corner;  // lower left corner of shelf area
-  List<Cell> contents;
+  List<Cell> areacontents;
   SimRandom randomsource; // for deterministic randomness
   /**
    * @param corner - lower left corner of shelf area
    * @param width - how many squares wide shelf area is
    */
   ShelfArea(Point corner, int width, SimRandom rand) {
-	contents = new ArrayList<Cell>();
+	areacontents = new ArrayList<Cell>();
 	randomsource = rand; 
 	this.corner = new Point(corner.x,corner.y);
 	this.width = width;
 	for (int i=corner.y-1; i<corner.y+1; i++)
 	 for (int j=corner.x; j<corner.x+width; j++) {
-	   contents.add(new Cell(j,i));
+	   areacontents.add(new Cell(j,i));
        }
 	populate();  // fill with shelves
     }
@@ -46,7 +46,7 @@ public class ShelfArea {
    * at a specified Point (x,y)
    */
   Cell getCell(Point P) {
-	for (Cell e: contents) {
+	for (Cell e: areacontents) {
 	  if (e.equals(P)) return e;
 	  }
 	return null;
@@ -56,7 +56,7 @@ public class ShelfArea {
    * this will be called by the constructor
    */
   void populate() {
-	for (Cell e: contents) {
+	for (Cell e: areacontents) {
 	  e.setContents(new Shelf(e));
 	  }
     }
@@ -75,7 +75,7 @@ public class ShelfArea {
    * @return true if cell P has non-null content (robot or shelf)
    */
   boolean occupied(Cell P) {
-	if (this.hasWithin(P) && P.contents != null) return true;
+	if (this.hasWithin(P) && P.getContents() != null) return true;
 	return false;
     }
   /**
@@ -84,7 +84,7 @@ public class ShelfArea {
    */
   void setContent(Cell P, Object O) {
 	if (!occupied(P) && hasWithin(P)) {
-	  P.contents = O;	
+	  P.setContents(O);	
 	  }
     }
   /**
