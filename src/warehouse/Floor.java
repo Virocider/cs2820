@@ -36,6 +36,7 @@ public interface Floor {
   Point getShippingDock(); 
   Point getReceivingDock(); 
   Point getCharger();
+  List<Point> getBeltArea();
   List<Point> getPath(Point start,Point end);
   Cell getCell(int x, int y);
   Cell getCell(Point P);

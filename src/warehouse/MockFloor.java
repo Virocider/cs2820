@@ -71,6 +71,13 @@ public class MockFloor implements Floor {
   public Point getShippingDock() { return shippingdock; }
   public Point getReceivingDock() { return receivingdock; }
   public Point getCharger() { return charger; }
+  public List<Point> getBeltArea() {
+	ArrayList<Point> beltarea = new ArrayList<Point>();
+	for (int i=picker.y; i>=0; i--) {
+	  beltarea.add(new Point(0,i));	
+	  }
+	return beltarea;
+    }
   /**
    * A very stupid getPath(s,t) that just makes
    * and returns a list of only two Points, s and t

@@ -35,6 +35,48 @@ public class MockOrders implements Orders, Tickable, Picker {
    * 
    */
   public void tick(int count) {
+	/**
+	 * What tick should do (vague description)
+	 * 1. if there is no Order in orderqueue, then
+	 *    maybe it's time to generate a random new
+	 *    Order and put it in the queue? Another idea
+	 *    would be to delay putting a new Order in the 
+	 *    queue (postpone that to a later tick)
+	 * 2. if no Order being worked on, and
+	 *    there is an Order in orderqueue, ask Belt 
+	 *    if a new Bin is available - a "no" from the 
+	 *    Belt would mean Orders has to wait - so ignore
+	 *    this tick. 
+	 * 3. if Belt says a new Bin can be started, and 
+	 *    there's an Order in the orderqueue, time to 
+	 *    start working (go to next step in this same tick).
+	 *    Probably some variables/fields will be changed
+	 *    to indicate that an Order is in progress, being
+	 *    worked on by the Picker.
+	 * 4. if an Order is being worked on (need additional
+	 *    variable/fields to know this), then check if 
+	 *    it has any Items that need fetching.
+	 * 5. if an Item needs fetching, do pretty much what
+	 *    is done in TestRobotScheduler, but when notify()
+	 *    of the Picker interface is called (see below), then
+	 *    get take the desired OrderItem from the Shelf that
+	 *    the Robot brought, mark that OrderItem as being
+	 *    in the Bin.
+	 * 6. if all OrderItems are filled from the current 
+	 *    Order being worked on, then tell the Belt that 
+	 *    the Bin at the Picker is ready to go. 
+	 *    
+	 * Special Note on Step 5. In MockRobotScheduler, it's 
+	 * assumed that whatever an Order needs, that OrderItem
+	 * will be on some Shelf. A more realistic idea is to 
+	 * attempt to find the OrderItem on a Shelf, but if it 
+	 * cannot be found, tell Inventory (so Inventory would need
+	 * to have a new method for that). Then Orders is stuck, 
+	 * waiting for the desired OrderItem to be present, checking
+	 * that in each tick(). Eventually, after Inventory has done
+	 * its job, Orders will find a Shelf with the needed OrderItem
+	 * and continue.
+	 */
     }
 
   /**
@@ -42,12 +84,12 @@ public class MockOrders implements Orders, Tickable, Picker {
    * Picker event notify(robot), not finished.
    */
   public void notify(Robot r, Shelf s) { 
-	// should be code here to desired Item from Shelf s
+	// should be code here to remove desired Item OrderItem from Shelf s
 	// (Inventory has a method to do that)
 	// mark that Item as being checked off in the Order
 	// and if this is the last Item needed, tell Belt 
 	// that a Bin is done.
-	R.returnShelf(r);
+	R.returnShelf(r);  // tell Robot to return Shelf back to its home
     };
   
   /**

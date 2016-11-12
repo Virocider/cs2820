@@ -7,7 +7,7 @@ import java.util.*;
  *
  */
 
-public class MockInventory implements Inventory {
+public class MockInventory implements Inventory, Tickable, Dock {
   List<Item> stock;  // all the in-stock items of warehouse
   SimRandom randomsource;  // supply of random numbers
   Floor floor;
@@ -34,6 +34,35 @@ public class MockInventory implements Inventory {
 	    }
 	  }
     }
+  
+  /**
+   * the tick() does nothing in this Mock class,
+   * but in a full coding, it would check whether the stock
+   * seems too low, and whether a truck should be asked to 
+   * arrive at the receiving dock, bringing more items - therefore
+   * there might be certain tick() calls which means that a truck
+   * has arrived, then tick() has some work to do. When a truck 
+   * arrives, the procedure should be somewhat like how Orders asks
+   * a Robot to bring a shelf (but to the dock, not to the Picker),
+   * and then put items onto the shelf, after which we tell the 
+   * Robot to take the shelf back to its home. Example of code which
+   * simulations what Orders might do is found in TestRobotScheduler.
+   */
+  public void tick(int count) {
+	// nothing here right now
+    }
+  
+  /**
+   * the Dock interface notify() method is called by 
+   * RobotScheduler some ticks after this code has 
+   * requested that a Robot bring a shelf to
+   * the dock; it's just like what the Picker interface is for,
+   * but for the receiving dock instead of the Picker location. 
+   */
+  public void notify(Robot r, Shelf s) {
+	// currently there is no code  
+    }
+  
   /**
    * @author Ted Herman
    * return a random Item from the catalog, to build a mock order

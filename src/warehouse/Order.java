@@ -22,4 +22,6 @@ public class Order {
 	isFilled = true;  // because all OrderItems are in bin
 	return null; // if no needed OrderItem can be found
     }
+  public String getAddress() { return address; }
+  public OrderItem[] getOrderItems() { return orderitems; }
   }
