@@ -15,11 +15,13 @@ public class Robot {
   public static final int idle = 0;
   public static final int pickershelfbound = 1;
   public static final int pickerbound = 2;
-  public static final int pickerdone = 3;
-  public static final int dockshelfbound = 4;
-  public static final int dockbound = 5;
-  public static final int dockdone = 6;
-  public static final int chargerbound = 7;
+  public static final int atpicker = 3;
+  public static final int afterpickershelfbound = 4;
+  public static final int dockshelfbound = 5;
+  public static final int dockbound = 6;
+  public static final int atdock = 7;
+  public static final int afterdockshelfbound = 8;
+  public static final int chargerbound = 9;
   
   Point location;
   List<Point> path;  // path of Points to travel

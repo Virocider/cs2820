@@ -34,6 +34,7 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    * on where it should go next (if anywhere).
    */
   private void moveRobot(Robot r) { 
+    System.out.println("robot at "+r.location+" state "+r.state);
 	if (r.path.size()>1) {
 	   r.location = r.path.get(0);  // move to first point in path
 	   r.path.remove(0);  // remove first point in path
@@ -42,8 +43,10 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	// when path has one Point, we arrive in this tick to target
 	Point goal = r.path.get(0);
 	r.location = goal;
+	System.out.println("robot movesto "+goal+" state "+r.state);
 	r.path = null;
-	switch (r.state) {
+	switch (r.state) { 
+	// these are cases of reaching goal in path
 	case Robot.pickershelfbound:
 	   Object o = F.getCell(goal).getContents();
 	   assert o instanceof Shelf;
@@ -51,32 +54,38 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	   r.shelf.pickup();  // robot claims this shelf
 	   r.path = F.getPath(r.location,F.getPicker());
 	   r.state = Robot.pickerbound;  // now heading to Picker
-	   return;
+	   break;
 	case Robot.pickerbound:
+	   r.state = Robot.atpicker;
 	   r.picker.notify(r,r.shelf);
-	   return;
-	case Robot.dockdone:
-	case Robot.pickerdone:
+	   break;
+	case Robot.afterdockshelfbound:
+	case Robot.afterpickershelfbound:
 	   r.shelf.putdown();  // Shelf is back home
 	   r.shelf = null;
 	   r.path = F.getPath(goal,F.getCharger());
 	   r.state = Robot.chargerbound;
-	   return;
+	   break;
 	case Robot.dockshelfbound:
 	   o = F.getCell(goal).getContents();
 	   assert o instanceof Shelf;
 	   assert r.shelf == (Shelf)o;
 	   r.shelf.pickup();  // robot claims this shelf
 	   r.path = F.getPath(r.location,F.getReceivingDock());
-	   r.state = Robot.dockbound;  // now heading to Picker
-	   return;
+	   r.state = Robot.dockbound;  // now heading to Dock
+	   break;
 	case Robot.dockbound:
+	   r.state = Robot.atdock;
 	   r.dock.notify(r,r.shelf);
-	   return;
+	   break;
+	case Robot.atpicker:
+	case Robot.atdock:
+	   break;   // just wait around in these cases
 	case Robot.chargerbound:
 	   r.state = Robot.idle;
-	   return;
+	   break;
 	   }
+	return;
     }
   
   /**
@@ -107,7 +116,11 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    * a ShelfArea on the Floor and put it down. Then the 
    * @param r is a Robot which is carrying a Shelf
    */
-  public void returnShelf(Robot r) { };
+  public void returnShelf(Robot r) { 
+	assert r.state == Robot.atpicker;
+	r.path = F.getPath(r.location,r.shelf.home);
+	r.state = Robot.afterpickershelfbound;
+    }
   /**
    * find an available Robot (which is not in use)
    */
