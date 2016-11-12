@@ -14,4 +14,12 @@ public class Order {
 	orderitems = items;
 	isFilled = false;
     }
+  public OrderItem getUnfilledItem() {
+	for (OrderItem e: orderitems) {
+	  if (e.inBin) continue;
+	  return e;
+	  }
+	isFilled = true;  // because all OrderItems are in bin
+	return null; // if no needed OrderItem can be found
+    }
   }

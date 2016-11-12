@@ -23,7 +23,7 @@ public class MockOrders implements Orders, Tickable, Picker {
 	randomsource = rand;
 	orderqueue = new LinkedList<Order>();
 	for (int i=0;i<3;i++) {
-	  orderqueue.addLast(makeOrder());
+	  orderqueue.addLast(getRandomOrder());
 	  }
     }
   
@@ -54,7 +54,7 @@ public class MockOrders implements Orders, Tickable, Picker {
    * @author Ted Herman
    * creates a random Order
    */
-  public Order makeOrder() {
+  public Order getRandomOrder() {
 	String addr = new Address(randomsource).randomAddress();
 	OrderItem[] orderitems = new OrderItem[1+randomsource.nextInt(2)];
 	for (int i=0;i<orderitems.length;i++) {

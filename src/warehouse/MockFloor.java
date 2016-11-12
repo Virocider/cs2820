@@ -14,8 +14,8 @@ public class MockFloor implements Floor {
   static final int warehousewidth = 160;
   static final int warehousedepth = 200;
 
-  final Point picker = new Point(0,10);
-  final Point packer = new Point(0,150);
+  final Point picker = new Point(0,190);
+  final Point packer = new Point(0,50);
   final Point shippingdock = new Point(0,0);
   final Point receivingdock = new Point(80,0);
   final Point charger = new Point(20,20);

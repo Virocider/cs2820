@@ -35,28 +35,46 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    */
   private void moveRobot(Robot r) { 
 	if (r.path.size()>1) {
+	   r.location = r.path.get(0);  // move to first point in path
 	   r.path.remove(0);  // remove first point in path
 	   return;
 	   }
 	// when path has one Point, we arrive in this tick to target
 	Point goal = r.path.get(0);
+	r.location = goal;
 	r.path = null;
-	if (goal.equals(F.getPicker())) {
+	switch (r.state) {
+	case Robot.pickershelfbound:
+	   Object o = F.getCell(goal).getContents();
+	   assert o instanceof Shelf;
+	   assert r.shelf == (Shelf)o;
+	   r.shelf.pickup();  // robot claims this shelf
+	   r.path = F.getPath(r.location,F.getPicker());
+	   r.state = Robot.pickerbound;  // now heading to Picker
+	   return;
+	case Robot.pickerbound:
 	   r.picker.notify(r,r.shelf);
-	   return;	
-	   }
-	if (goal.equals(F.getReceivingDock())) {
-	   r.dock.notify(r,r.shelf);
 	   return;
-	   }
-	if (goal.equals(F.getCharger())) {
-	   r.inuse = false;
-	   return;
-	   }
-	if (goal.equals(r.shelf.home)) {
+	case Robot.dockdone:
+	case Robot.pickerdone:
 	   r.shelf.putdown();  // Shelf is back home
 	   r.shelf = null;
-	   r.path = F.getPath(goal,F.getCharger()); 
+	   r.path = F.getPath(goal,F.getCharger());
+	   r.state = Robot.chargerbound;
+	   return;
+	case Robot.dockshelfbound:
+	   o = F.getCell(goal).getContents();
+	   assert o instanceof Shelf;
+	   assert r.shelf == (Shelf)o;
+	   r.shelf.pickup();  // robot claims this shelf
+	   r.path = F.getPath(r.location,F.getReceivingDock());
+	   r.state = Robot.dockbound;  // now heading to Picker
+	   return;
+	case Robot.dockbound:
+	   r.dock.notify(r,r.shelf);
+	   return;
+	case Robot.chargerbound:
+	   r.state = Robot.idle;
 	   return;
 	   }
     }
@@ -71,9 +89,10 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
   public void requestShelf(Shelf s, Picker p) { 
 	Point target = s.home; // where Shelf sits
 	Robot robot = findRobot(); // get some idle robot
-	robot.path = F.getPath(robot.location,F.getPicker());
-	robot.inuse = true;
+	robot.path = F.getPath(robot.location,target);
+	robot.state = Robot.pickershelfbound;
 	robot.picker = p;
+	robot.shelf = s;  // don't have it yet, but will get it
     };
   /**
    * @param s is a Shelf to fetch and bring to the receiving
@@ -94,8 +113,8 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
    */
   private Robot findRobot() {
 	// currently there is only one robot, this is trivial
-	Robot r = robots[1];
-	assert !r.inuse;
+	Robot r = robots[0];
+	assert r.state == Robot.idle;
 	assert r.shelf == null;
 	return r;
     }
