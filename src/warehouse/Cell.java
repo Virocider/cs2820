@@ -36,4 +36,16 @@ public class Cell extends Point {
     if (contents instanceof Shelf) result += " contains Shelf";
     return result;
     }
+  /**
+   * Provide a clone() method for Visualizer; this code has a 
+   * BUG - the clone is not a deep copy (to make it a deep copy,
+   * things like Robot, Shelf, etc, would all need to implement
+   * clone as well).
+   */
+  public Object clone() {
+	Cell n = new Cell(this.x,this.y);
+	n.contents = this.contents;
+	n.shadow = this.shadow;
+	return n;
+    }
   }

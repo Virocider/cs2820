@@ -66,6 +66,8 @@ public class MockFloor implements Floor {
    * @author Ted Herman
    * methods to return known locations in warehouse
    */ 
+  public int getWarehouseWidth() { return warehousewidth; }
+  public int getWarehouseDepth() { return warehousedepth; }
   public Point getPicker() { return picker; }
   public Point getPacker() { return packer; }
   public Point getShippingDock() { return shippingdock; }

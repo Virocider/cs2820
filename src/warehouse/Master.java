@@ -15,6 +15,8 @@ public class Master {
 	RobotScheduler robotscheduler;
 	Inventory inventory;
 	Orders orders;
+	Belt belt;
+	Visualizer visualizer;
 	/**
 	 * Constructor should build instance of all other components,
 	 * save them in members above for later. Order of creating the
@@ -22,11 +24,14 @@ public class Master {
 	 * know about the others at the time of their construction.
 	 */
 	public Master(Floor inf, RobotScheduler inr,
-			Inventory ini, Orders ino) {
+			Inventory ini, Orders ino, Belt inb,
+			Visualizer inv) {
 		floor = inf;
 		robotscheduler = inr; 
 		inventory = ini;
 		orders = ino;
+		belt = inb;
+		visualizer = inv;
 	    }
 	/**
 	 * Run a simulation. This code would need to be generalized
@@ -37,12 +42,11 @@ public class Master {
 	 */
 	public void Run(int limit) {
 	  for (int i=0; i<limit; i++) {
-		Tickable t = (Tickable) robotscheduler;
-		t.tick(i);  
-		t = (Tickable) orders;
-		t.tick(i);
-	  }		
-		
-	}
-
-}
+		((Tickable)robotscheduler).tick(i);  
+		((Tickable)orders).tick(i);
+		((Tickable)inventory).tick(i);
+		((Tickable)belt).tick(i);
+		((Tickable)visualizer).tick(i);
+	    }		
+	  }
+    }

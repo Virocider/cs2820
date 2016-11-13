@@ -31,6 +31,8 @@ public interface Floor {
   // methods used mainly by Visualizer 
   // there should be more methods, so Visualizer can
   // learn where are Belt and ShelfAreas
+  int getWarehouseWidth();
+  int getWarehouseDepth();
   Point getPicker(); 
   Point getPacker(); 
   Point getShippingDock(); 
