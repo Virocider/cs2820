@@ -27,6 +27,18 @@ public class MockFloor implements Floor {
   /**
    * Constructor of Mock Floor
    * @param rand is a SimRandom for predictable randomness
+   * 
+   * The logic of this Mock Floor is that the grid of locations
+   * in the warehouse is by (x,y) locations with (0,0) in the 
+   * top left, and (width-1,depth-1) in the bottom right. The 
+   * Point objects are used to refer to locations - methods anywhere
+   * just make a new Point(82,120) to refer to (82,120) for example.
+   * <b>However</b>, to know <b>what is at</b> a given (x,y), you 
+   * need to look in the Cell for that point. Mock Floor therefore
+   * has a map from points to cells, the "allpoints" variable, which
+   * is the single authoritative place where cells are stored. All
+   * other parts of the warehouse need to call Floor methods to 
+   * get a cell or store something in a cell.
    */
   public MockFloor(SimRandom rand) {
     randogen = rand;
@@ -54,7 +66,8 @@ public class MockFloor implements Floor {
     }
   /**
    * @author Ted Herman
-   * return Cell at specified place
+   * @return Cell at specified place
+   * @param Point to find Cell
    */
   public Cell getCell(Point P) {
 	return allpoints.get(P.toString());  
