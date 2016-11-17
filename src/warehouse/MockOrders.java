@@ -6,8 +6,12 @@ public class MockOrders implements Orders, Tickable, Picker {
 	
   private Inventory I;
   private RobotScheduler R;
+  private Belt B;
   private LinkedList<Order> orderqueue;
   private SimRandom randomsource;
+  private Order currentorder; 
+  private Bin currentbin;
+  private Item neededitem;
   
   /**
    * @author Ted Herman
@@ -16,12 +20,16 @@ public class MockOrders implements Orders, Tickable, Picker {
    * it just creates a few initial orders)
    * @param rand is a SimRandom, for predictable randomness
    */
-  public MockOrders(Inventory I, 
+  public MockOrders(Inventory I, Belt B,
 		  RobotScheduler R, SimRandom rand) {
 	this.I = I; // so we can later call upon Inventory methods
 	this.R = R; // so that later, we can call RobotScheduler
+	this.B = B; // we will need the Belt
 	randomsource = rand;
 	orderqueue = new LinkedList<Order>();
+	currentorder = null;
+	currentbin = null;
+	neededitem = null;
 	for (int i=0;i<3;i++) {
 	  orderqueue.addLast(getRandomOrder());
 	  }
@@ -77,6 +85,53 @@ public class MockOrders implements Orders, Tickable, Picker {
 	 * its job, Orders will find a Shelf with the needed OrderItem
 	 * and continue.
 	 */
+	// special case: make currentbin variable null if an order was
+	// just finished and the belt moved it away
+	if (currentbin != null && currentbin.isFinished() &&
+		 B.binAvailable()) currentbin = null; 
+	if (orderqueue.size() < 1) { makeOrder(); return; }
+	if (currentorder == null) {
+	  currentorder = orderqueue.pop(); // start work
+	  System.out.println("Picker starts new order");
+	  }
+	
+	// at this point, Orders is acting the Picker role, so it has 
+	// to look at the current order and decide what to do
+	if (currentbin == null && B.binAvailable()) {
+	  System.out.println("Picker got a new bin");
+	  currentbin = B.getBin();
+	  }
+	if (currentbin == null) return;  // try again in another tick to get bin
+	if (currentorder.isFilled) {
+	   // we have a bin, we have a filled order, so finish up this bin
+	   currentbin.order = currentorder;
+	   currentbin.setFinished();
+	   currentorder = null;
+	   return;  // done! The Bin part will take it away from here.
+	   }
+	
+	// have we already requested a needed item? if yes, just wait for a 
+	// later tick, or when the Robot notifies of arrival
+	if (neededitem != null) return;
+	
+	// at this point in code, there is a currentorder not yet filled
+	OrderItem nextitem = null;
+	for (OrderItem item: currentorder.orderitems) {
+	  if (item.inBin) continue;
+	  nextitem = item; 
+	  break;  // found an item to fetch
+	  }
+	if (nextitem == null) { // all items are in bin, so this order is done
+	  currentorder.isFilled = true;
+	  return;   // let a later tick take care of the bin
+	  }
+	// try to find the item in the warehouse, and ask for a robot
+	if (!R.robotAvailable()) return;  // wait for a later tick
+	Shelf s = I.findItem(nextitem);
+	if (s == null) return;  // item not in warehouse, Inventory should replenish
+	neededitem = nextitem;  // remember the item needed when Robot arrives
+	R.requestShelf(s,(Picker)this);  // pretend to be the picker
+	return;
     }
 
   /**
@@ -89,7 +144,34 @@ public class MockOrders implements Orders, Tickable, Picker {
 	// mark that Item as being checked off in the Order
 	// and if this is the last Item needed, tell Belt 
 	// that a Bin is done.
+	Item[] atpicker = I.onShelf(s);
+	int found = -1;
+	for (int i=0;i<atpicker.length;i++) {
+	  if (atpicker[i].equals(neededitem)) found = i;
+	  }
+	assert found > -1;
+	Item got = I.removeItem(neededitem, s);
+	for (OrderItem e: currentorder.orderitems) {
+	  if (!e.inBin && e.equals(neededitem)) {  // take item from shelf
+		System.out.println("Picker item put in bin");
+		e.inBin = true;  // put item in bin  
+		break;
+	    }
+	  }
+	neededitem = null;   // no longer need this item
 	R.returnShelf(r);  // tell Robot to return Shelf back to its home
+    };
+    
+  /**
+   * @author Ted Herman
+   * get a random new order and add it to the queue; a fancier
+   * implementation of this would perhaps delay actually putting
+   * the new order into the queue for some number of ticks, to 
+   * simulate how orders might come in sporadically over time; 
+   * and perhaps multiple new orders could be created in one call  
+   */
+  private void makeOrder() {
+	orderqueue.add(getRandomOrder());
     };
   
   /**

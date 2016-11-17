@@ -11,6 +11,7 @@ public class TestRobotScheduler {
   SimRandom randomsource;
   Floor F;
   Inventory I;
+  Belt B;
   RobotScheduler R;
   Orders O;
   Order someorder;
@@ -35,9 +36,10 @@ public class TestRobotScheduler {
 	  LP = new localPicker();
 	  randomsource = new SimRandom();
 	  F = new MockFloor(randomsource);
+	  B = new MockBelt(F);
 	  I = new MockInventory(F,randomsource);
 	  R = new MockRobotScheduler(F);
-	  O = new MockOrders(I,R,randomsource);
+	  O = new MockOrders(I,B,R,randomsource);
 	  someorder = O.getRandomOrder();
 	  someitem = someorder.getUnfilledItem();
 	  someshelf = I.findItem(someitem);

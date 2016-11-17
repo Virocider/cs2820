@@ -1,13 +1,8 @@
 package warehouse;
 
-import static org.junit.Assert.*;
+public class Main {
 
-import org.junit.Test;
-
-public class TestMaster {
-
-  @Test
-  public void test000() {
+  public static void main(String[] args) {
 	SimRandom randomsource = new SimRandom();
 	Floor F = new MockFloor(randomsource);
 	RobotScheduler R = new MockRobotScheduler(F);
@@ -16,9 +11,6 @@ public class TestMaster {
 	Inventory I = new MockInventory(F,randomsource);
 	Orders O = new MockOrders(I,B,R,randomsource);
 	Master T = new Master(F,R,I,O,B,V);
-	T.Run(100);
-	// right now this is so simple, there is no assertEquals
-	// kind of thing to test
-	}
-
+	T.Run(100);	
+    }
   }

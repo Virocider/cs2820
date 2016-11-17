@@ -32,4 +32,5 @@ public class Shelf {
   public void putdown() {
 	resting = true;
     }
+  public String toString() { return "Shelf"; }
   }

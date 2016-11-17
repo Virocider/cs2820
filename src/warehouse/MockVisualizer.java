@@ -61,7 +61,7 @@ public class MockVisualizer implements Visualizer, Tickable {
   private Map<Point,Cell> cloneAllCells() {
 	Map<Point,Cell> L = new HashMap<Point,Cell>();
 	for (Point p: allPoints) {
-	  L.put(p,F.getCell(p));
+	  L.put(p,(Cell)F.getCell(p).clone());
 	  }
 	return L;
     }
@@ -69,19 +69,22 @@ public class MockVisualizer implements Visualizer, Tickable {
    * Tick method just prints time and what has changed since the 
    * previous tick, if anything
    */
-  public void tick(int count) {
-	String display = "Tick %d";
-	System.out.println(String.format(display,count));  
+  public void tick(int count) {  
 	Map<Point,Cell> newcells = cloneAllCells();
 	for (Point p: allPoints) {
 	  Cell c = newcells.get(p);
 	  // skip over cells that are empty, or have same as what we saw previously
 	  if (c.getContents()==null) continue; 
 	  if (c.getContents()==previousCells.get(p).getContents()) continue;
-	  if (c.getContents() instanceof Robot) 
+	  if (   (c.getContents() instanceof Robot)
+		  || (c.getContents() instanceof Shelf)
+		  || (c.getContents() instanceof Bin)
+		  || (c.getContents() instanceof Parcel)) {
+		String display = "Visualizer tick %d ";
+		System.out.print(String.format(display,count));
 		System.out.println(c);
-	  if (c.getContents() instanceof Shelf)
-		System.out.println(c);
+	    }
+	  
       }
 	// done with tick, save newcells for next time in previousCells
 	previousCells = newcells;

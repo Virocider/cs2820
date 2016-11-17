@@ -4,6 +4,7 @@ public class MockBelt implements Belt, Tickable {
 	
   Floor F;
   List<Point> beltarea;
+  Bin pickerBin;
 
   /**
    * @author Ted Herman
@@ -13,6 +14,7 @@ public class MockBelt implements Belt, Tickable {
   public MockBelt(Floor F) {
 	this.F = F;
 	beltarea = F.getBeltArea();
+	pickerBin = null;
     }
   
   /**
@@ -39,14 +41,32 @@ public class MockBelt implements Belt, Tickable {
    * collecting a lot of parcels and grouping them into a truck
    *
    */
-  public void tick(int count) {
-	  
+  public void tick(int count) {;
+	// first take care of a finished bin
+	if (pickerBin != null) {
+      if (!pickerBin.isFinished()) return; // belt cannot move
+      Cell c = F.getCell(F.getPicker());   // look into Picker cell
+      if (c.getContents()!=null) return;   // wait for cell to empty
+      c.setContents(pickerBin);
+      pickerBin = null;
+	  }
+	// if belt is movable, loop to copy cells forward
+	if (!isMovable()) return;
+	Object prev = null;  // temporary variable used in copy forward
+	for (Point p: beltarea) {
+	  Cell c = F.getCell(p);
+	  Object t = c.getContents(); // save what it has for next time
+	  c.setContents(prev);        // write over what it was 
+	  prev = t;
+	  }
+	if (prev != null) System.out.println("something dropped off belt");
     }
   
   /**
    * Local method to see whether belt can be moved
    */
   private boolean isMovable() {
+	if (pickerBin != null) return false;  // wait for picker to finish bin
 	for (Point p: beltarea) {
 	  Cell c = F.getCell(p);
 	  Object o = c.getContents();
@@ -72,15 +92,21 @@ public class MockBelt implements Belt, Tickable {
     }
   
   /**
+   * @author Ted Herman
    * Called by Orders to check whether a new Bin can be safely started
    */
   public boolean binAvailable() {
-	return false;
+	if (pickerBin != null) return false;
+	Cell c = F.getCell(F.getPicker());
+	if (c.getContents() != null) return false;
+    return true;
     }
   /**
    * Called by Orders to simulate a Picker starting a new Bin
    */
   public Bin getBin() {
-	return null; 
+	assert pickerBin == null;
+	pickerBin = new Bin();
+	return pickerBin;
     }
   }	

@@ -15,4 +15,5 @@ public class Bin {
   public void setFinished() { finished = true; }
   public Order getOrder() { return order; }
   public void setOrder(Order o) { order = o; }
+  public String toString() { return "Bin"; }
   }

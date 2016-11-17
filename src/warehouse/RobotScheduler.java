@@ -26,4 +26,8 @@ public interface RobotScheduler {
    * put that Shelf back into a ShelfArea on the Floor
    */
   void returnShelf(Robot r);
+  /**
+   * @return true if a robot is idle and available
+   */
+  boolean robotAvailable();
   }

@@ -34,6 +34,8 @@ public class Cell extends Point {
     String result = super.toString();
     if (contents instanceof Robot) result += " contains Robot";
     if (contents instanceof Shelf) result += " contains Shelf";
+    if (contents instanceof Bin) result += " contains Bin";
+    if (contents instanceof Parcel) result += " contains Parcel";
     return result;
     }
   /**

@@ -66,12 +66,12 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	  assert tempcell.getContents() == null; 
 	  tempcell.setContents(r);
 	  }
-	// System.out.println("robot movesto "+goal+" state "+r.state);
 	r.path = null;
 	switch (r.state) { 
 	// these are cases of reaching goal in path
 	case Robot.pickershelfbound:
 	   r.shelf.pickup();  // robot claims this shelf
+	   assert !r.shelf.onFloor();
 	   r.path = F.getPath(r.location,F.getPicker());
 	   r.state = Robot.pickerbound;  // now heading to Picker
 	   break;
@@ -150,5 +150,12 @@ public class MockRobotScheduler implements RobotScheduler, Tickable {
 	assert r.state == Robot.idle;
 	assert r.shelf == null;
 	return r;
+    }
+  /**
+   * @return true if a robot is available
+   */
+  public boolean robotAvailable() {
+	Robot r = robots[0];
+	return r.state == Robot.idle;
     }
   }

@@ -108,13 +108,31 @@ public class MockInventory implements Inventory, Tickable, Dock {
    * @return null or a Shelf object
    * Just return the first occurrence of this item's Shelf
    * WARNING BUGGY - could fail if looking for multiple units of
-   * the same item (they could be on different shelves)
+   * the same item (they could be on different shelves). 
+   * 
+   * Added functionality: if an item cannot be found, then 
+   * magically make it appear on some shelf. This is an easy 
+   * substitute for simulating a truck carrying needed items
+   * to the receiving dock and having a robot replenish shelves.
+   * Not realistic, but OK for now.
    */
   public Shelf findItem(Item i) {
 	for (Item e: stock) {
 	  if (!e.place.onFloor()) continue;  // ignore moving shelves
       if (e.equals(i)) return e.getPlace();  
 	  }
+	// even though this is going to return null (out of stock)
+	// go ahead and put the needed item somewhere, like on another
+	// shelf
+	Item magic = new Item(i.id,i.description);  // just what we need
+	// search for a shelf which isn't being transported
+	Shelf s = null;
+	while (s == null) { // dangerous, we know (infinite loop?)
+	  Point p = floor.randomInShelfArea();
+	  Cell c = floor.getCell(p);
+	  if (c.getContents() instanceof Shelf) s = (Shelf)c.getContents();
+	  }
+	magic.place = s;
 	return null;
     }
   /**
@@ -126,7 +144,7 @@ public class MockInventory implements Inventory, Tickable, Dock {
    */
   public Item removeItem(Item a, Shelf s) {
 	for (Item e: stock) {
-      assert !(e.place.onFloor());  // only remove from carried Shelf
+	  if (e.place.onFloor()) continue; // only remove from carried Shelf
       if (!e.equals(a)) continue;   // look for this item only
       if (!e.place.home.equals(s.home)) continue; // only Shelf s
       stock.remove(e);

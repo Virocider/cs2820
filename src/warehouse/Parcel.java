@@ -18,4 +18,5 @@ public class Parcel {
     }
   public boolean isFinished() { return finished; }
   public void setFinished() { finished = true; }
+  public String toString() { return "Parcel"; }
   }

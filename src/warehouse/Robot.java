@@ -37,4 +37,7 @@ public class Robot {
 	picker = null;
 	dock = null;
     }
+  public String toString() {
+	return String.format("Robot at %s with state %d",location,state);  
+    }
   }
