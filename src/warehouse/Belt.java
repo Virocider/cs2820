@@ -2,7 +2,7 @@ package warehouse;
 
 /**
  * 
- * @author Ted Herman
+ * @author Ted Herman.
  * 
  * Methods provided by the Belt component.
  *
